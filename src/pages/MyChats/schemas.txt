@@ -1,0 +1,22 @@
+const message={
+    text: string,
+    groupId: string,
+    createdby: ,
+    createdat
+
+}
+
+
+const groupData = {
+  users: usersUid,
+  createdBy: currentUser.uid,
+  groupName,
+  isPrivate,
+  photoURL: "",
+  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+ };
+
+ 
+
+
+    

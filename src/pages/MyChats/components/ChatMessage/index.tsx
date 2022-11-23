@@ -1,30 +1,37 @@
 import { useEffect, useState } from "react";
 import "./styles.scss";
 
-interface Props {
+ interface Props {
   text: string;
   createdBy: string;
   createdAt?: any;
-  contacts?: any;
-  user?: any;
+ 
 }
-
-export default function ChatMessage(props: Props) {
+ const currentusername= "aditya"; //fecth from auth current user
+ export default function ChatMessage(props: Props) {
   const [senderName, setSenderName] = useState(null as any);
-  const { text, createdBy, createdAt, contacts, user } = props;
+  const { text, createdBy, createdAt } = props;
 
-  //const messageType = createdBy === auth.currentUser?.uid ? "sent" : "received";
+  const messageType = createdBy === "aditya" ? "sent" : "received";
 
   useEffect(() => {
-    const contact = contacts.find((elem: any) => elem.uid == createdBy);
-
-    
+    //const contact = contacts.find((elem: any) => elem.uid == createdBy);
+   
+     const sender=  createdBy === currentusername ? currentusername : createdBy;
+    setSenderName(sender) ;
+    // if (contact) {
+    //   setSenderName(contact.contactName);
+    // } else if (createdBy !== auth.currentUser?.uid) {
+    //   setSenderName(createdBy);
+    // } else {
+    //   setSenderName(user.displayName);
+    // }
   }, []);
 
   return (
     <>
-      {createdAt && (
-        <div className={`message`}>
+      { (
+        <div className={`message ${messageType}`}>
           <div className="message__content">
             <div className="message__content__sender">{senderName}</div>
             <div className="message__content__text">{text}</div>
@@ -39,10 +46,10 @@ export default function ChatMessage(props: Props) {
 }
 
 function toDateTime(secs: number) {
-  var t = new Date(0); // Epoch
+  const t = new Date(0); // Epoch
   t.setUTCSeconds(secs);
-  var hours = t.getHours();
-  var minutes = t.getMinutes();
+  const hours = t.getHours();
+  const minutes = t.getMinutes();
 
   return (
     <span>
@@ -51,3 +58,5 @@ function toDateTime(secs: number) {
     </span>
   );
 }
+
+

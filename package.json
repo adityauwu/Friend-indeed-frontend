@@ -51,7 +51,7 @@
   },
   "scripts": {
     "dev": "webpack serve",
-    "start":"craco start",
+    "start": "craco start",
     "build": "webpack --mode production --progress --hide-modules",
     "tscheck": "tsc",
     "test": "craco test",
@@ -99,5 +99,3 @@
     "*.+(json|css|md)": "prettier --write"
   }
 }
-
-

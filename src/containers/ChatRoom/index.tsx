@@ -25,6 +25,33 @@ export default function ChatRoom(props: Props) {
   const [groupName, setGroupName] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const chatter = [
+    {
+      
+      text: "testing chat 01",
+      createdBy: "aditya",
+    
+      },
+    {
+      
+      text: "testing chat 02",
+      createdBy: "aditya",
+     
+    },
+    {
+      
+      text: "tesing chat 03",
+      createdBy: "sanyam",
+      
+    },
+  ]
+  
+  
+  
+  const [conversations,setConversations]= useState(chatter);
+
+
+
   const { selectedChat, handleSelectChat, contacts, user } = props;
 
   const dummy = useRef<HTMLDivElement>(null);
@@ -49,6 +76,16 @@ export default function ChatRoom(props: Props) {
     event.preventDefault();
     
     if (messageText && dummy.current) {
+       setConversations(conversations=>[...conversations,{  
+        text: messageText,
+        createdBy: "aditya"
+      }]);
+      
+      // chatter.push({
+      //   text: messageText,
+      //   createdBy: "aditya"
+      // })
+      
       // createMessage({
       //   text: messageText,
       //   groupId: selectedChat.id,
@@ -135,19 +172,22 @@ export default function ChatRoom(props: Props) {
           </header>
           <main>
             <div>
-              {[]?.map((msg: any, index) => {
+             <div ref={dummy} /> 
+             
+           
+             
+             {conversations.map((msg: any, index) => {
                 return (
                   <ChatMessage
                     key={index}
                     text={msg.text}
                     createdBy={msg.createdBy}
-                    createdAt={msg.createdAt}
-                    contacts={contacts}
-                    user={user}
+                   
+                   
                   />
                 );
               })}
-              <div ref={dummy} />
+           
             </div>
           </main>
           <footer>

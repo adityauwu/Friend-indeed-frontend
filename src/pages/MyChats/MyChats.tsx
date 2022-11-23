@@ -8,6 +8,7 @@ import ChatRoom from "../../containers/ChatRoom";
 import "./styles.scss";
 function MyChats() {
   const [selectedChat, setSelectedChat] = useState({ "name": "first", "id": "12","groupName":"a" });
+  //const [conversationsis, setConversation] = useState({"text":"Testing Conversations","groupName":"12","createdby":"12","createdat":"12-12-2022"})
 
   const sessions = [
     {
