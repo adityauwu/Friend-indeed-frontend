@@ -172,7 +172,7 @@ export default function ChatRoom(props: Props) {
           </header>
           <main>
             <div>
-             <div ref={dummy} /> 
+             {/* <div ref={dummy} />  */}
              
            
              

@@ -23,16 +23,41 @@ export default function MenuContent(props: Props) {
   const [loading, setLoading] = useState(false);
 
   const {
-    contacts,
+     contacts,
     conversations,
     handleSelectChat,
     user,
-    handleRemoveContact,
-    handleAddContact,
-    handleUpdateContact,
+    // handleRemoveContact,
+    // handleAddContact,
+    // handleUpdateContact,
   } = props;
   // const { currentUser } = auth;
+  //const conversation =[]
+  const conversationslocal =  [
+    {
+      "name":"First Conversation",
+      "id" : "1"
+    },
+    { "name": "Second Conversation",
+      "id"  : "2"
 
+    },
+    { 
+      "name": "Second Conversation",
+      "id"  : "2"
+    },
+  
+     { 
+      "name": "third Conversation",
+      "id"  : "3"
+    },
+    { 
+      "name": "Fourth Conversation",
+      "id"  : "4"
+    },
+  
+  
+  ]
 
 
   const handleChangeProfileImage = () => {
@@ -105,12 +130,12 @@ export default function MenuContent(props: Props) {
             <Tabs defaultActiveKey="1" centered>
               <Tabs.TabPane tab="Coversations" key="1">
                 <ConversationsTab
-                  contacts={contacts}
-                  conversations={conversations}
+                   contacts={contacts}
+                  conversations={conversationslocal}
                   handleSelectChat={handleSelectChat}
                 />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Contacts" key="2">
+              {/* <Tabs.TabPane tab="Contacts" key="2">
                 <ContactsTab
                   user={user}
                   contacts={contacts}
@@ -120,7 +145,7 @@ export default function MenuContent(props: Props) {
                   handleAddContact={handleAddContact}
                   handleUpdateContact={handleUpdateContact}
                 />
-              </Tabs.TabPane>
+              </Tabs.TabPane> */}
             </Tabs>
           </div>
         </div>

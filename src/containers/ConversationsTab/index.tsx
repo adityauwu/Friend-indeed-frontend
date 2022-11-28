@@ -24,7 +24,7 @@ export default function ConversationsTab(props: Props) {
     <>
       <div className="conversations-tab">
         <div className="conversations-list">
-          {[{"name":"first","id":"12"}]?.map((conv, index) => {
+          {conversations?.map((conv: { name: string; id: string; }, index: React.Key | null | undefined) => {
             return (
               <ConversationCard
                 key={index}

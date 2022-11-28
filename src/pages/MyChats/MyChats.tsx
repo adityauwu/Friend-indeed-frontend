@@ -9,34 +9,10 @@ import "./styles.scss";
 function MyChats() {
   const [selectedChat, setSelectedChat] = useState({ "name": "first", "id": "12","groupName":"a" });
   //const [conversationsis, setConversation] = useState({"text":"Testing Conversations","groupName":"12","createdby":"12","createdat":"12-12-2022"})
-
-  const sessions = [
-    {
-      date: "25 Jan",
-      time: "04: 00pm",
-      title: "Session between Lakshitha & Dr.Khanchandani",
-      categories: ["Depression", "Hypertension"],
-      imageUrl: "https://post.healthline.com/wp-content/uploads/2019/10/Female_Therapist_732x549-thumbnail.jpg",
-      meetingLink: "https://meet.google.com/zwb-koam-dgs",
-    },
-    {
-      date: "04 Feb",
-      time: "01: 00pm",
-      title: "Session between Lakshitha & Dr.Mohini",
-      categories: ["Anxiety", "Hypertension"],
-      imageUrl: "https://post.healthline.com/wp-content/uploads/2019/10/Female_Therapist_732x549-thumbnail.jpg",
-      meetingLink: "https://meet.google.com/zwb-koam-dgs",
-    },
-    {
-      date: "16 Feb",
-      time: "05: 00pm",
-      title: "Session between Lakshitha & Dr.Parag",
-      categories: ["Bipolar disorder"],
-      imageUrl:
-        "https://post.healthline.com/wp-content/uploads/2019/10/Female_Therapist_732x549-thumbnail.jpg",
-      meetingLink: "https://meet.google.com/zwb-koam-dgs",
-    },
-  ]
+  const handleSelectChat = (chat: any) => {
+    setSelectedChat(chat);
+  };
+  
   return (
 
     <Container>
@@ -47,7 +23,7 @@ function MyChats() {
               user={{}}
               contacts={{}}
               conversations={{}}
-              handleSelectChat={{}}
+              handleSelectChat={handleSelectChat}
               handleRemoveContact={{}}
               handleAddContact={{}}
               handleUpdateContact={{}}
