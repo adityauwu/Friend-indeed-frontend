@@ -5,7 +5,10 @@ import ConversationsTab from "../ConversationsTab";
 import { Button, Tabs, Dropdown, Menu } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import "./styles.scss";
+import { useDispatch } from "react-redux";
 
+import { useAppSelector } from "../../redux/hooks";
+import { selectData,TherapistList } from "../../pages/MyChats/MyChats.slice";
 interface Props {
   user: any;
   contacts: any;
@@ -33,32 +36,19 @@ export default function MenuContent(props: Props) {
   } = props;
   // const { currentUser } = auth;
   //const conversation =[]
-  const conversationslocal =  [
-    {
-      "name":"First Conversation",
-      "id" : "1"
-    },
-    { "name": "Second Conversation",
-      "id"  : "2"
+  const dispatch = useDispatch()
+  const TherapistListData=useAppSelector(selectData);
+  //const [conversationLocal,setconversationLocal] = useState([]);
+  useEffect(() => {
+   
+    dispatch(TherapistList());
+ 
+  },[]);
+  
+  
 
-    },
-    { 
-      "name": "Second Conversation",
-      "id"  : "2"
-    },
-  
-     { 
-      "name": "third Conversation",
-      "id"  : "3"
-    },
-    { 
-      "name": "Fourth Conversation",
-      "id"  : "4"
-    },
-  
-  
-  ]
-
+ 
+ 
 
   const handleChangeProfileImage = () => {
     setChangingProfileImage(!changingProfileImage);
@@ -130,8 +120,8 @@ export default function MenuContent(props: Props) {
             <Tabs defaultActiveKey="1" centered>
               <Tabs.TabPane tab="Coversations" key="1">
                 <ConversationsTab
-                   contacts={contacts}
-                  conversations={conversationslocal}
+                  contacts={contacts}
+                  conversations={TherapistListData}
                   handleSelectChat={handleSelectChat}
                 />
               </Tabs.TabPane>

@@ -1,24 +1,27 @@
 import { useEffect, useState } from "react";
+import { userData } from "../../../Login/LoginSlice";
 import "./styles.scss";
 
  interface Props {
   text: string;
+  user: any;
   createdBy: string;
   createdAt?: any;
+  selectedChat: any;
  
 }
- const currentusername= "aditya"; //fecth from auth current user
+ //fecth from auth current user
  export default function ChatMessage(props: Props) {
   const [senderName, setSenderName] = useState(null as any);
-  const { text, createdBy, createdAt } = props;
-
-  const messageType = createdBy === "aditya" ? "sent" : "received";
+  const { text, createdBy, createdAt,user ,selectedChat} = props;
+  const currentusername= user.name; 
+  const messageType = createdBy === user.id ? "sent" : "received";
 
   useEffect(() => {
     //const contact = contacts.find((elem: any) => elem.uid == createdBy);
    
-     const sender=  createdBy === currentusername ? currentusername : createdBy;
-    setSenderName(sender) ;
+     const sender=  createdBy === user.id ? currentusername : selectedChat.name;
+     setSenderName(sender) ;
     // if (contact) {
     //   setSenderName(contact.contactName);
     // } else if (createdBy !== auth.currentUser?.uid) {
@@ -26,7 +29,7 @@ import "./styles.scss";
     // } else {
     //   setSenderName(user.displayName);
     // }
-  }, []);
+  }, );
 
   return (
     <>
@@ -36,7 +39,7 @@ import "./styles.scss";
             <div className="message__content__sender">{senderName}</div>
             <div className="message__content__text">{text}</div>
             <p className="message__content__at">
-              {createdAt && toDateTime(createdAt.seconds)}
+              {createdAt}
             </p>
           </div>
         </div>

@@ -94,14 +94,14 @@ export const updateTherapistProfileAsync = createAsyncThunk(
       if(!id) throw { response: { data: 'Important info missing, please refresh' } }
       const { data } = await API.put(`/therapist/${id}`, input)
       if(data?.success) {
-        notification.success({ message: 'Updated details' })
+        //notification.success({ message: 'Updated details' })
         return data?.data
       } else {
-        notification.success({ message: data?.error })
+        //notification.success({ message: data?.error+"bwahahaha" })
         return rejectWithValue(data?.error)
       }
     } catch (err: any) {
-      return rejectWithValue(err?.response?.data)
+      return rejectWithValue("sdfdsfsdfdsfdsfdsf")
     }
   }
 )

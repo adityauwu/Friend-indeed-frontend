@@ -18,13 +18,15 @@ export default function ConversationsTab(props: Props) {
     setCreatingGroup(!creatingGroup);
   };
   
-
+  
+  
   const { contacts, conversations, handleSelectChat } = props;
+
   return (
     <>
       <div className="conversations-tab">
         <div className="conversations-list">
-          {conversations?.map((conv: { name: string; id: string; }, index: React.Key | null | undefined) => {
+          {conversations.therapistList.map((conv: { name: string; id: string; }, index: React.Key | null | undefined) => {
             return (
               <ConversationCard
                 key={index}
@@ -36,14 +38,14 @@ export default function ConversationsTab(props: Props) {
             );
           })}
         </div>
-        <Button onClick={handleShowCreateConversation}>New conversation</Button>
+        {/* <Button onClick={handleShowCreateConversation}>New conversation</Button> */}
       </div>
-      <CreateConversation
-        contacts={contacts}
+      {/* <CreateConversation
+        contacts={TherapistLocal}
         creatingGroup={creatingGroup}
         handleShowCreateConversation={handleShowCreateConversation}
         handleSelectChat={handleSelectChat}
-      />
+      /> */}
     </>
   );
 }

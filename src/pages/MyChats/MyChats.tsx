@@ -1,26 +1,43 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { Row, Avatar, Typography, Tag } from "antd"
 import { ClockCircleOutlined, CalendarOutlined } from "@ant-design/icons"
-
+ import { STORAGE_USER_CONSTANT } from '../../shared/utils/constants';
 import Menu from "../../containers/Menu";
 import ChatRoom from "../../containers/ChatRoom";
 import "./styles.scss";
+import { useDispatch } from "react-redux";
+import { fetchConversation, selectData } from "./MyChats.slice";
+import { useAppSelector } from "../../redux/hooks";
+import { set } from "lodash";
 function MyChats() {
-  const [selectedChat, setSelectedChat] = useState({ "name": "first", "id": "12","groupName":"a" });
-  //const [conversationsis, setConversation] = useState({"text":"Testing Conversations","groupName":"12","createdby":"12","createdat":"12-12-2022"})
-  const handleSelectChat = (chat: any) => {
-    setSelectedChat(chat);
-  };
   
-  return (
+  const [selectedChat, setSelectedChat] = useState(null as any);
+ 
+  //const [selectedChat, setSelectedChat] = useState({ "name": "first", "id": "12","groupName":"a" });
+ 
+  const handleSelectChat = (chatname: any) => {
+    
+    setSelectedChat(chatname);
+  
+  };
+  const currentUser = JSON.parse(String(localStorage.getItem(STORAGE_USER_CONSTANT)))
 
+  // useEffect(() => {
+  //   dispatch(fetchConversation({senderId:"456",receiverId:currentUser.id}))
+  
+  // },selectedChat);
+
+
+
+  return (
+  
     <Container>
       {1 && (
         <AppContainer>
           <MenuCard>
             <Menu
-              user={{}}
+              user={currentUser}
               contacts={{}}
               conversations={{}}
               handleSelectChat={handleSelectChat}
@@ -35,10 +52,11 @@ function MyChats() {
             {selectedChat ? (
               <>
                 <ChatRoom
-                  user={{}}
+                  user={currentUser}
                   contacts={{} }
+                  receivedMessage={{}}
                   selectedChat={selectedChat}
-                  handleSelectChat={{} }
+                  handleSelectChat={{}}
                 />
               </>
             ) : (
@@ -46,6 +64,7 @@ function MyChats() {
                 style={{
                   height: "100%",
                   width: "100%",
+                  marginLeft: "50%",
                   display: "flex",
                   padding: "32px 20% 32px 32px",
                   alignItems: "center",
@@ -65,6 +84,8 @@ function MyChats() {
     </Container>
 
   )
+
+
 }
 
 
@@ -87,10 +108,11 @@ const StyledRow = styled(Row)`
 
 const MenuCard = styled.div`
  
-  flex: 40%;
-  min-width: 210px;
+  
+ 
+  width: 30%;
   position: relative;
-  z-index: 100;
+   display: flex;
   overflow: hidden;
   border-right: 1px solid #cccccc;
 
@@ -100,7 +122,7 @@ const AppContainer = styled.div`
   position: relative;
   height:100%;
   display: flex;
-  width: 100%;
+  
   overflow: hidden;
   border: 1px solid black;
 `

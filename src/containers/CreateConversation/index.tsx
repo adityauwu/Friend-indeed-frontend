@@ -80,7 +80,7 @@ export default function CreateConversation(props: Props) {
   const handleRemoveSelectedContact = (contact: any) => {
     const selectedContactsClone = [...selectedContacts];
     const updatedSelectedContacts = selectedContactsClone.filter(
-      (selectedContact) => selectedContact.uid !== contact.uid
+      (selectedContact) => selectedContact.id !== contact.id
     );
     setSelectedContacts(updatedSelectedContacts);
     setAvailableContacts(() => []);
@@ -122,7 +122,7 @@ export default function CreateConversation(props: Props) {
               size="large"
               type="text"
             />
-            <div>Add conversation participants</div>
+            <div>Type Reciever's Name</div>
           </div>
         </header>
         <div className="search-contacts">
@@ -149,7 +149,7 @@ export default function CreateConversation(props: Props) {
           </div>
 
           <div className="contacts-list">
-            {[]?.map((contact, index) => {
+            {contacts?.map((contact, index) => {
               if (contact) {
                 return (
                   <ContactCard

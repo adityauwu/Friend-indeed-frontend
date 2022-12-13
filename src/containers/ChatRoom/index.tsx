@@ -6,81 +6,178 @@ import { Input, Button, Menu, Dropdown, Modal } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import "./styles.scss";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { selectData, sendMessage } from "../../pages/MyChats/MyChats.slice";
+
+import { stringify } from "rc-field-form/es/useWatch";
+import { fetchConversation, selectData } from "../../pages/MyChats/MyChats.slice";
+import { AsyncThunkAction } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import { addMessages, getMessages } from "../../api/MessageRequests";
 
 interface Props {
   user: any;
   selectedChat: any;
   contacts: any;
   handleSelectChat: any;
+  receivedMessage: any;
+  
 }
 
+
 export default function ChatRoom(props: Props) {
-  const dispatch = useAppDispatch();
-  const message = useAppSelector(selectData);
-  console.log(message)
+
+
+
+  
   const [messageText, setMessageText] = useState("");
   const [editGroupName, setEditGroupName] = useState(false);
   const [editGroupImage, setEditGroupImage] = useState(false);
+ 
   const [groupName, setGroupName] = useState("");
   const [loading, setLoading] = useState(false);
+ 
 
-  const chatter = [
-    {
-      
-      text: "testing chat 01",
-      createdBy: "aditya",
-    
-      },
-    {
-      
-      text: "testing chat 02",
-      createdBy: "aditya",
-     
-    },
-    {
-      
-      text: "tesing chat 03",
-      createdBy: "sanyam",
-      
-    },
-  ]
+ 
   
   
   
-  const [conversations,setConversations]= useState(chatter);
+  //const [conversations,setConversations]= useState(chatter);
 
 
 
-  const { selectedChat, handleSelectChat, contacts, user } = props;
+  const { selectedChat, handleSelectChat, user,receivedMessage} = props;
 
+  const dispatch = useDispatch()
+  const conversationchat=useAppSelector(selectData);
+
+  const [conversations,setConversations] = useState([{}]);
+
+  const [messages, setMessages] = useState([{}]);
+  const [newMessage, setNewMessage] = useState("");
+
+  // const handleChange = (newMessage : any)=> {
+  //   setNewMessage(newMessage)
+  // }
+  
   const dummy = useRef<HTMLDivElement>(null);
-
+  
+  
   useEffect(() => {
-    dispatch(sendMessage());
+   console.log("Fetching Messages between--->" + user.id + "---->" + selectedChat.id);
+   
+   const fetchMessages = async () => {
+      try {
+        const { data } = await getMessages(user.id, selectedChat.id);
+        setMessages(data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    
+    };
 
-    if (dummy.current) {
-      dummy.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, []);
+    if (selectedChat !== null) fetchMessages();
+  }, [selectedChat]);
 
-  const handleMessageOnChange = (
+  
+  
+
+
+// Always scroll to last Message
+useEffect(()=> {
+  if (dummy.current) {
+        dummy.current.scrollIntoView({ behavior: "smooth" });
+      }
+},[messages])
+
+
+
+// Send Message
+
+// -----> uncomment form this part
+const handleSend= async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault();
+  
+  const message = {
+    senderId : user.id,
+    content: newMessage,
+    receiverId: selectedChat.id,
+}
+const receiverId = selectedChat.id;
+// send message to socket server  uncomment the line below
+       //setSendMessage({...message, receiverId})
+// send message to database
+try {
+  const { data } = await addMessages(message);
+  console.log(data);
+  setMessages(messages =>[...messages, data.data]);
+  setNewMessage("");
+}
+catch
+{
+  console.log("error")
+}
+}
+
+////--> uncomment till this partt
+
+
+// Receive Message from parent component
+useEffect(()=> {
+
+if (receivedMessage !== null && receivedMessage.senderId === selectedChat.id && receivedMessage.receiverId == user.id) {
+  console.log("Message Arrived: ", receivedMessage)
+  setMessages(messages=>[...messages,receivedMessage]);
+}
+
+},[receivedMessage])
+
+
+
+
+
+  
+  
+  // useEffect(() => {
+  //   console.log("loading chats between#-->"+ user.id+ "#-->"+ selectedChat.id)
+  
+  //   dispatch(fetchConversation({senderId:user.id,receiverId:selectedChat.id}))
+    
+  //   setConversations(conversationchat.chatList);
+     
+  //   if (dummy.current) {
+  //     dummy.current.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // },[selectedChat]);
+
+  const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     event.preventDefault();
     
-    setMessageText(event.target.value);
+    setNewMessage(event.target.value);
   };
 
   const handleCreateMessage = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     
     if (messageText && dummy.current) {
-       setConversations(conversations=>[...conversations,{  
-        text: messageText,
-        createdBy: "aditya"
+      conversations.push({
+        content: messageText,
+        createdBy: user.id,
+        createdAt:new Date()
+      }) 
+      setConversations(conversations =>[...conversations,{  
+        content: messageText,
+        createdBy: user.id,
+        createdAt:new Date()
       }]);
-      
+     
+      console.log(conversations);
+      // conversationchat.chatList.push({
+      //   content: messageText,
+      //   senderId: user.id,
+      //   recieverId: selectedChat.id
+
+      // })
       // chatter.push({
       //   text: messageText,
       //   createdBy: "aditya"
@@ -164,7 +261,7 @@ export default function ChatRoom(props: Props) {
             >
               {selectedChat.photoURL ? "" : ""}
             </div>
-            <span>{selectedChat.groupName}</span>
+            <span>{selectedChat.name}</span>
             <Dropdown.Button
               overlay={menu}
               icon={<MoreOutlined style={{ fontSize: "1.65rem" }} />}
@@ -172,17 +269,19 @@ export default function ChatRoom(props: Props) {
           </header>
           <main>
             <div>
-             {/* <div ref={dummy} />  */}
+             <div ref={dummy} /> 
              
            
              
-             {conversations.map((msg: any, index) => {
+             {messages.map((msg: any, index:any) => {
                 return (
                   <ChatMessage
                     key={index}
-                    text={msg.text}
-                    createdBy={msg.createdBy}
-                   
+                    user={user}
+                    selectedChat={selectedChat}
+                    text={msg.content}
+                    createdBy={msg.senderId}
+                    createdAt={msg.createdAt}
                    
                   />
                 );
@@ -194,11 +293,11 @@ export default function ChatRoom(props: Props) {
             <form onSubmit={(e) => e.preventDefault()}>
               <Input
                 type="text"
-                value={messageText}
+                value={newMessage}
                 placeholder="Type a message"
-                onChange={handleMessageOnChange}
+                onChange={handleChange}
               />
-              <Button onClick={handleCreateMessage}>Send message</Button>
+              <Button onClick={handleSend}>Send message</Button>
             </form>
           </footer>
         </div>
@@ -226,3 +325,5 @@ export default function ChatRoom(props: Props) {
     </>
   );
 }
+
+

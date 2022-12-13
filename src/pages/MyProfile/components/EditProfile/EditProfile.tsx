@@ -37,8 +37,8 @@ function EditProfile({
     initialValues = {
       ...initialValues,
       ...user,
-      consultationFee: parseInt(initialValues.consultationFee),
-      experience: parseInt(initialValues.experience),
+      consultationFee: Number(initialValues.consultationFee),
+      experience: Number(initialValues.experience),
       categories: user?.categories?.map(c => c?.category?.name)
     }
   }
@@ -53,7 +53,8 @@ function EditProfile({
         }))
       }
     } catch (e: any) {
-      notification.error({ message: e.message })
+      
+     //notification.error({ message: e.message })
     }
   }
 
@@ -77,7 +78,7 @@ function EditProfile({
         wrapperCol={{ span: 24 }}
         initialValues={initialValues}
         onFinish={handleSubmit}
-        onFinishFailed={e => console.log(e)}
+        //onFinishFailed={e => console.log(e)}
       >
         <Form.Item name='name' label="Name">
           <StyledInput placeholder='Enter your name' />

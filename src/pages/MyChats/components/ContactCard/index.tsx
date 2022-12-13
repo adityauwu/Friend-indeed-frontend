@@ -22,17 +22,17 @@ export default function ContactCard(props: Props) {
               backgroundSize: "cover",
             }}
           >
-            {contact.photoURL ? null : contact.contactName[0]}
+            {contact.photoURL ? null : contact.name[0]}
           </div>
         </div>
         <div className="contact-card__name">
-          <span style={{ marginRight: "auto" }}>{contact.contactName}</span>
+          <span style={{ marginRight: "auto" }}>{contact.name}</span>
           <Button
             type="text"
             shape="circle"
             icon={<EditOutlined style={{ color: "#555" }} />}
             onClick={() =>
-              handleEditingContact(contact.contactName, contact.uid)
+              handleEditingContact(contact.name, contact.id)
             }
           />
           <Button
@@ -40,7 +40,7 @@ export default function ContactCard(props: Props) {
             shape="circle"
             icon={<CloseOutlined style={{ color: "#555" }} />}
             onClick={() =>
-              handleRemoveContact && handleRemoveContact(contact.uid)
+              handleRemoveContact && handleRemoveContact(contact.id)
             }
           />
         </div>

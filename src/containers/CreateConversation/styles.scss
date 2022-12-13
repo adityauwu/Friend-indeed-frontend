@@ -2,11 +2,12 @@
   position: absolute;
   top: 0;
   bottom: 0;
+  visibility: inherit;
   right: 0;
   left: 0;
   z-index: 100;
   transition: transform 0.3s cubic-bezier(0.25, 0.75, 0.7, 1);
-  background-color: #fff;
+    background-color:#fff;
   > header {
     display: flex;
     flex-direction: column;
@@ -45,6 +46,7 @@
       }
     }
     .contacts-list {
+      background-color: #fff;
       .contact-card {
         &:nth-child(1) {
           .contact-card__name {
@@ -56,18 +58,18 @@
         }
       }
     }
-    .create-group-section {
-      bottom: 0;
-      right: 0;
-      left: 0;
-      height: 106px;
-      position: absolute;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      // background-color: rgb(237, 237, 237);
-      background-color: #eee;
-    }
+    // .create-group-section {
+    //   bottom: 0;
+    //   right: 0;
+    //   left: 0;
+    //   height: 106px;
+    //   position: absolute;
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+    //   // background-color: rgb(237, 237, 237);
+    //   background-color: #eee;
+    // }
     .no-contacts {
       text-align: center;
       padding: 72px 0;
