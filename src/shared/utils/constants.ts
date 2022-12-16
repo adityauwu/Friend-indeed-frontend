@@ -27,7 +27,16 @@ export enum ROUTES {
   MY_SESSIONS = "sessions",
   MY_CHATS = "chats",
   PRESCRIBE_TREATMENT = "prescribe-treatment",
+  FRIEND_IN_NEED = "friend-in-need"
 }
+
+export const  emojiMap = new Map<number, any>([
+  [1,"😄"  ],
+  [2,"😊"  ],
+  [3,"😶" ],
+  [4,"🙁" ],
+  [5,"😢" ]
+]);
 
 export const ratingsOptions = [
   { label: "1", code: "1", value: 1 },

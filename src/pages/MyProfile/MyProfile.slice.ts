@@ -87,8 +87,9 @@ export const fetchTherapistProfileAsync = createAsyncThunk(
 export const updateTherapistProfileAsync = createAsyncThunk(
   'therapistProfile/updateData',
   async (
-    {id, input}: { id: string | undefined, input: Partial<Therapist> },
-    { rejectWithValue }
+    {id, input}: { id: string , 
+      input: Partial<Therapist> }
+    
   ) => {
     try {
       if(!id) throw { response: { data: 'Important info missing, please refresh' } }
@@ -98,10 +99,10 @@ export const updateTherapistProfileAsync = createAsyncThunk(
         return data?.data
       } else {
         //notification.success({ message: data?.error+"bwahahaha" })
-        return rejectWithValue(data?.error)
+        return data?.error
       }
     } catch (err: any) {
-      return rejectWithValue("sdfdsfsdfdsfdsfdsf")
+      return err
     }
   }
 )

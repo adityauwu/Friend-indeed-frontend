@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Modal, Rate, Input, Space } from 'antd'
+import { update } from 'lodash'
 
 type FeedbackProps = {
   open: boolean,
@@ -22,7 +23,16 @@ const Feedback = ({
 
   const handleRating = (value: number) => setRating(value)
   const handleNotes = (e: React.BaseSyntheticEvent) => setNotes(e.target.value)
+  const updatefeedback = async (values : any)=>{
+    try{
 
+
+    }
+    catch{
+      
+    }
+  }
+  
   return (
     <Modal
       closable
@@ -30,6 +40,7 @@ const Feedback = ({
       title='Edit Feedback'
       okText='Update'
       onCancel={closeModal}
+      onOk={updatefeedback}
       {...modalStyles}
     >
       <Space direction='vertical' style={{ width: '100%' }}>

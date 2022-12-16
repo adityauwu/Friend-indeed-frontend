@@ -5,7 +5,7 @@ import "react-loading-skeleton/dist/skeleton.css"
 import { AnimatePresence } from "framer-motion"
 import { Routes, Route } from "react-router-dom"
 
-import { Home, LandingPage, Login, MyProfile, MySessions } from "../../pages"
+import { Home, LandingPage, Login, MyProfile, MySessions,MyFriends } from "../../pages"
 import { AppSkeleton, NotFound, PrivateRoute } from "../../shared/components"
 import { ROUTES } from "../../shared/utils/constants"
 import AuthContext from "../../shared/context/AuthContext"
@@ -27,6 +27,14 @@ const AnimatedRoutes = () => {
               element={
                 <PrivateRoute>
                   <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTES.FRIEND_IN_NEED}
+              element={
+                <PrivateRoute>
+                  <MyFriends/>
                 </PrivateRoute>
               }
             />

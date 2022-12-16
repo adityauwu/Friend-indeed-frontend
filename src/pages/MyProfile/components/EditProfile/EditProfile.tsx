@@ -7,11 +7,13 @@ import { useAppSelector } from '../../../../redux/hooks';
 import { fetchCategoriesAsync, selectData } from '../../../Home/Home.slice';
 import { Patient, Therapist, updateTherapistProfileAsync, selectData as selectProfile } from '../../MyProfile.slice';
 import styled from 'styled-components';
+import { type } from 'os';
+import { API } from '../../../../shared/utils/helper';
 
 type EditProfileProps = {
   visible: boolean,
   onClose: () => void,
-  user: (Therapist & Patient) | null,
+  user: (Therapist & Patient)|null,
   userIsTherapist: boolean,
 }
 
@@ -37,8 +39,8 @@ function EditProfile({
     initialValues = {
       ...initialValues,
       ...user,
-      consultationFee: Number(initialValues.consultationFee),
-      experience: Number(initialValues.experience),
+      consultationFee: (initialValues.consultationFee) as number,
+      experience: (initialValues.experience) as number,
       categories: user?.categories?.map(c => c?.category?.name)
     }
   }
@@ -47,10 +49,19 @@ function EditProfile({
     try {
       if(userIsTherapist) {
         console.log(values)
-        dispatch(updateTherapistProfileAsync({
-          id: user?.id,
-          input: values
-        }))
+        try {
+          if(!user?.id) throw { response: { data: 'Important info missing, please refresh' } }
+          const { data } = await API.put(`/therapist/${user.id}`, values)
+          if(data?.success) {
+            notification.success({ message: 'Updated details' })
+           // return data?.data
+          } else {
+            //notification.success({ message: data?.error+"bwahahaha" })
+            //return data?.error
+          }
+        } catch (err: any) {
+          return console.log(err)
+        }
       }
     } catch (e: any) {
       
