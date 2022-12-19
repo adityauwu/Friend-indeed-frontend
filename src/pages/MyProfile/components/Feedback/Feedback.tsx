@@ -23,15 +23,15 @@ const Feedback = ({
 
   const handleRating = (value: number) => setRating(value)
   const handleNotes = (e: React.BaseSyntheticEvent) => setNotes(e.target.value)
-  const updatefeedback = async (values : any)=>{
-    try{
+  // const updatefeedback = async (values : any)=>{
+  //   try{
 
 
-    }
-    catch{
+  //   }
+  //   catch{
       
-    }
-  }
+  //   }
+  // }
   
   return (
     <Modal
@@ -40,7 +40,7 @@ const Feedback = ({
       title='Edit Feedback'
       okText='Update'
       onCancel={closeModal}
-      onOk={updatefeedback}
+      // onOk={updatefeedback}
       {...modalStyles}
     >
       <Space direction='vertical' style={{ width: '100%' }}>

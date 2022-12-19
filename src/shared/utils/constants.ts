@@ -1,5 +1,7 @@
 //export const PROD_URL = "https://friendin-deed.herokuapp.com/api/v1/"
 
+import { Love } from "animated-emojis"
+
 //export const STAGING_URL = "http://localhost:5000/api/v1"
 export const PROD_URL = "http://localhost:5000/api/v1"
 export const STAGING_URL = "http://localhost:5000/api/v1"
@@ -30,13 +32,18 @@ export enum ROUTES {
   FRIEND_IN_NEED = "friend-in-need"
 }
 
+
+
 export const  emojiMap = new Map<number, any>([
-  [1,"😄"  ],
+  [1,"<Love/>"  ],
   [2,"😊"  ],
-  [3,"😶" ],
+  [3,"😑"  ],
   [4,"🙁" ],
-  [5,"😢" ]
+  [5,"😭"  ]
 ]);
+
+
+
 
 export const ratingsOptions = [
   { label: "1", code: "1", value: 1 },

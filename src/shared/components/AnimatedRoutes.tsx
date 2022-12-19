@@ -50,7 +50,7 @@ const AnimatedRoutes = () => {
               path={ROUTES.MY_SESSIONS}
               element={
                 <PrivateRoute>
-                  <UpcomingMeetings />
+                  <MySessions />
                 </PrivateRoute>
               }
             />

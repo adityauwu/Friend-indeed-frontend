@@ -9,7 +9,8 @@ import { Button } from '../../../../shared/components';
 import { CategoryProps } from '../../Home.slice';
 import { emojiMap, ROUTES } from '../../../../shared/utils/constants';
 import { useEffect, useState } from 'react';
-import { getUserMood } from '../../../../api/MessageRequests';
+import { FollowedFriends, getUserMood, removeFriend } from '../../../../api/MessageRequests';
+import { Love,Hate,Fear,Happy,CryingFace}  from 'animated-emojis'
 
 export type FollowedFriendsProps = {
     id: string,
@@ -24,21 +25,86 @@ export type FollowedFriendsProps = {
 
 interface Props {
     data1: FollowedFriendsProps,
-    text?: string;
+    
     setFriendsInNeed? :any;
-    localfriends? : any;
+    
+    userId? : any;
    
   }
 
 
 
 export default function FollowedFriendsCard(props : Props){
-  const {data1} = props;
+  const {data1, setFriendsInNeed, userId} = props;
   const [mood,setMood] = useState(null as any);
+  const [friendRemoved, setFriendRemoved] = useState(false);
   
+  
+  
+  
+  
+  
+  
+  const AniEmo =(num : number)=>{
+    console.log(num)
+    if(num===5){
+      return <CryingFace size={5}/>
 
+    }
+    else if(num===4){
+      return <Fear size={5}/>
+    }
+    else if(num===3){
+      return <Hate size={5}/>
+    }
+    else {
+      return <Happy size={5}/>
+    }
+  }
+
+
+  useEffect(()=> {
+
+    const fetchFriends = async () => {
+      try {
+        const { data } = await FollowedFriends(userId);
+       
+        setFriendsInNeed(data.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    
+    };
+  
+    fetchFriends() 
+    setFriendRemoved(false);
+
+  },[friendRemoved])
+  
+  
+  const RemoveFriend= async () =>{
+
+    console.log("inside remove friend");
+    try {
+      const data = await removeFriend( data1.id);
+      console.log("Friend Removed successfully--->"+ data)
+      setFriendRemoved(true);
+     
+    }
+    catch
+    {
+      console.log("error")
+    }
+
+
+    
+}
+ 
+ 
+ 
+ 
   useEffect(() => {
-    const fetchMessages = async () => {
+    const fetchMood = async () => {
       try {
         const {data } = await getUserMood(data1.friendId );
           if(data.data){
@@ -53,8 +119,7 @@ export default function FollowedFriendsCard(props : Props){
     
     };
     
-    fetchMessages()
-
+    fetchMood()
 
   }, [])
 
@@ -72,8 +137,10 @@ export default function FollowedFriendsCard(props : Props){
               {/* {<SubTitle>{data.email}</SubTitle>} */}
               {/* { <SubTitle>{data.company}</SubTitle>} */}
               {/* {<SubTitle>The users mood is sad</SubTitle>} */}
-              <Emoji>{emojiMap.get(mood?mood:1)}</Emoji>
-              {/* <Emoji>{emojiMap.get(mood)}</Emoji> */}
+              
+              {/* <Love size={5}></Love> */}
+
+              <Emoji>{AniEmo(mood)}</Emoji> 
             </Info>
             
           </InfoDiv>
@@ -83,7 +150,9 @@ export default function FollowedFriendsCard(props : Props){
           </CategoriesDiv> */}
           <FooterDiv>
             
-            <StyledBtn>Remove</StyledBtn>
+           <StyledBtn
+              onClick={() => RemoveFriend()}
+              >Remove</StyledBtn>
             {/* <Button
               width={45}
               buttonFontSize={8}

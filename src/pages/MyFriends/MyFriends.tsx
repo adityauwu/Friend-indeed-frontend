@@ -7,7 +7,9 @@ import { SearchOutlined, FilterFilled } from '@ant-design/icons'
 import { debounce } from 'lodash'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import theme from '../../shared/utils/theme';
+
 const currentUser = JSON.parse(String(localStorage.getItem(STORAGE_USER_CONSTANT)))
+
 
 
 import {
@@ -124,9 +126,12 @@ function FilterBar() {
   
   return (
     <Container>
-       
+        
+       <Wrapper><Title>Friends That You Follow</Title></Wrapper>
+        <Wrapper>
+      
+        
         <FriendsContainer>
-        <Title>Friends That You Follow</Title>
         <List
             grid={{
               gutter: 24,
@@ -142,14 +147,16 @@ function FilterBar() {
               <List.Item key={info.id} style={{ display: 'flex', justifyContent: 'center' }}>
                 <FollowedFriendsCard  
                    data1={info}
-                   text = {"adasd"}
+                   setFriendsInNeed ={setFriendsInNeed}
+                   userId = {currentUser.id}
+
+                   
                     />
               </List.Item>
             )}
           />
-
-        </FriendsContainer>
-        
+       </FriendsContainer>
+        </Wrapper>
         <Title>Search For Friends</Title>
         <FilterContainer>
         <StyledRow gutter={[16, 24]}>
@@ -271,6 +278,8 @@ function FilterBar() {
                   text = {"adasdsad"}
                   setFriendsInNeed = {setFriendsInNeed}
                   localfriends ={localfriends}
+                  AddFriend = { AddFriend}
+                  userId = {currentUser.id}
                   
                 />
               </List.Item>
@@ -288,13 +297,25 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  
 `;
+
+const Wrapper = styled.div`
+  
+background-color: ${theme.primary};
+display: flex;
+align-items : center;
+  
+`;
+
+
 const FriendsContainer = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+  width: 80%;
+ 
+  margin: 20px 0;
+  padding: 5px;
+  margin: 0 auto;
+ 
   background-color: ${theme.primary};
   
 `;
@@ -342,7 +363,13 @@ const FilterIcon = styled(FilterFilled)`
 
 const TherapistGrid = styled.div`
   width: 80%;
-  margin: 50px 0;
+  margin : 25px 5px;
+  margin: 0 auto;
+  padding: 5px;
+
+ 
+  align-items : center;
+  justify-content: center;
 
   @media (max-width: 450px) {
     width: 90%;

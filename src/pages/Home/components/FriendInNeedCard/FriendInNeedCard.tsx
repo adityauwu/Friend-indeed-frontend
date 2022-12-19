@@ -6,6 +6,8 @@ import theme from '../../../../shared/utils/theme';
 import { Button } from '../../../../shared/components';
 import { CategoryProps } from '../../Home.slice';
 import { ROUTES } from '../../../../shared/utils/constants';
+import { addMessages, addtoFriend, checkFriend, FollowedFriends } from '../../../../api/MessageRequests';
+import { useEffect, useState } from 'react';
 
 
 
@@ -14,16 +16,12 @@ export type FriendInfoCardProps = {
   id: string,
   name: string,
   imageUrl?: string,
-  experience?: number,
-  rating?: number,
-  consultationFee?: number,
-  qualification?: string[],
-  categories?: any[],
-  email?: string,
+  categories? : any,
+  email? : string,
   company? : string,
-  mood? : string,
 
 }
+
 
 
 interface Props {
@@ -31,30 +29,91 @@ interface Props {
   text?: string;
   setFriendsInNeed? :any;
   localfriends? : any;
+  AddFriend : any;
+  userId : string;
  
 }
 
 
 export default function FriendInfoCard(props: Props) {
-  const { data, text,setFriendsInNeed,localfriends} = props; 
+  const { data, text,setFriendsInNeed,localfriends, userId} = props; 
   
   const navigate = useNavigate();
+  const [friendAdded,setFriendAdded] = useState(false);
 
-  const addFriend = () => {
-    localfriends.push({
-      id: data.id,
-      email: data.email,
-      imageUrl: "https://picsum.photos/id/299/200/300",
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const { data } = await FollowedFriends(userId);
+       
+        setFriendsInNeed(data.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    
+    };
+  
+    fetchFriends() 
+    setFriendAdded(false);
+   
+  }, [friendAdded])
+
+
+
+  const AddFriend = async (info: FriendInfoCardProps) =>{
+    if(info.id == userId ){
+        console.log("Cannot Follow urself");
+    }
+    
+    else{
+
+     const { data } = await checkFriend(userId, info.id);
+     if(data.data.count >0){
+      console.log("Already Followed");
+     }
+      else{
+        try {
+          const data = await addtoFriend(info, userId);
+          console.log("Friend Adeed successfully--->"+ data)
+          setFriendAdded(true);
+          // try {
+          //   const friends = await FollowedFriends(userId);
+          //   setFriendsInNeed(friends.data.data)
+          
+          // }
+          // catch
+          // {
+          //   console.log("errore while setting friendinneed")
+          // }
+
+        }
+        catch
+        {
+          console.log("error")
+        }
+
+      }
+
+    }
+
+
+  }
+  
+  
+  
+  // const addFriend = () => {
+  //   localfriends.push({
+  //     id: data.id,
+  //     email: data.email,
+  //     imageUrl: "https://picsum.photos/id/299/200/300",
       
 
-    })
+  //   })
 
-    setFriendsInNeed(localfriends);
-  }
+  //   setFriendsInNeed(localfriends);
+  // }
 
-  const cardCategories = data.categories && data.categories.length>2
-  ? data.categories.slice(0, 2).map(c => c?.category?.name).concat(`+${data.categories.length-3} more`)
-  : data.categories?.map(c => c?.category?.name)
+
 
   return (
     <Card>
@@ -87,7 +146,7 @@ export default function FriendInfoCard(props: Props) {
           width={45}
           buttonFontSize={11}
           name='Follow'
-          onClick={() => addFriend()}
+          onClick={() => AddFriend(data)}
         />
       </FooterDiv>
     </Card>
