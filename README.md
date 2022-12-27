@@ -91,13 +91,6 @@ To get a local copy up and running follow these simple example steps.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTACT -->
-## Contact
-
-Joel Vinay Kumar - [@coderspider](https://twitter.com/coderspider) - joelvinaykumar@gmail.com
-
-Sanyam Bharani - [@twitter_handle](https://twitter.com/twitter_handle) - sanyambharani07@gmail.com
-
-Project Link: [https://github.com/pesto-students/friend-indeed-fe-n13-delta-1](https://github.com/pesto-students/friend-indeed-fe-n13-delta-1)
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
