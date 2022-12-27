@@ -13,7 +13,9 @@ import { set } from "lodash";
 function MyChats() {
   
   const [selectedChat, setSelectedChat] = useState(null as any);
- 
+
+
+
   //const [selectedChat, setSelectedChat] = useState({ "name": "first", "id": "12","groupName":"a" });
  
   const handleSelectChat = (chatname: any) => {
@@ -27,7 +29,11 @@ function MyChats() {
   //   dispatch(fetchConversation({senderId:"456",receiverId:currentUser.id}))
   
   // },selectedChat);
-
+  const message = {
+    senderId : currentUser.id,
+    content: "asdasdsadasd",
+    receiverId: "123",
+}
 
 
   return (
@@ -54,7 +60,7 @@ function MyChats() {
                 <ChatRoom
                   user={currentUser}
                   contacts={{} }
-                  receivedMessage={{}}
+                  receivedMessage={message}
                   selectedChat={selectedChat}
                   handleSelectChat={{}}
                 />

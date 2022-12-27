@@ -1,14 +1,22 @@
 import React, { useState } from 'react'
 import { Modal, Rate, Input, Space } from 'antd'
 import { update } from 'lodash'
+import { NULL } from 'sass'
+import { saveFeedback } from '../../../../api/MessageRequests'
 
 type FeedbackProps = {
   open: boolean,
+  therapistId : any,
+  patientId : any,
+  setnewFAdded: any,
   closeModal: () => void
 }
 
 const Feedback = ({
   open,
+  therapistId,
+  patientId,
+  setnewFAdded,
   closeModal
 }: FeedbackProps) => {
 
@@ -23,15 +31,28 @@ const Feedback = ({
 
   const handleRating = (value: number) => setRating(value)
   const handleNotes = (e: React.BaseSyntheticEvent) => setNotes(e.target.value)
-  // const updatefeedback = async (values : any)=>{
-  //   try{
+  const updatefeedback = async ()=>{
+    if(therapistId!=null){
 
+    const data ={
+      rating : rating,
+      comment : notes,
+      therapistId : therapistId,
+      patientId : patientId
+    }
+    try{
+      const data1= await saveFeedback(data)
+      setnewFAdded(true)
+      console.log(data1.data);
 
-  //   }
-  //   catch{
-      
-  //   }
-  // }
+    }
+    catch(error){
+      console.log("Cant Save Feedback sorry");
+    }
+  
+  
+    }
+  }
   
   return (
     <Modal
@@ -40,7 +61,7 @@ const Feedback = ({
       title='Edit Feedback'
       okText='Update'
       onCancel={closeModal}
-      // onOk={updatefeedback}
+       onOk={updatefeedback}
       {...modalStyles}
     >
       <Space direction='vertical' style={{ width: '100%' }}>

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Avatar, Typography, Tag, Rate } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 import theme from '../../../../shared/utils/theme';
 import { Button } from '../../../../shared/components';
@@ -65,7 +65,10 @@ function TherapistInfoCard({
           width={45}
           buttonFontSize={11}
           name='Book Now'
-          onClick={() => navigate(`${ROUTES.MY_PROFILE}?userId=${id}`)}
+          //onClick={() => navigate(`${ROUTES.MY_PROFILE}?userId=${id}`)}
+          onClick={() => window.location.href=`${ROUTES.MY_PROFILE}?userId=${id}`}
+          
+          //onClick={<NavLink>}
         />
       </FooterDiv>
     </Card>

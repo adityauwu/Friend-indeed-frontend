@@ -18,8 +18,12 @@ export const LOGO_URL =
 export const DEFAULT_PROFILE_URL =
   "https://avatars.dicebear.com/api/miniavs/shreya-happy.svg"
 
-export const CLOUDINARY_URL =
-  "cloudinary://437741655674911:BJk-ociOBpdvGhtYgiRWegpqitU@friendindeed"
+// export const CLOUDINARY_URL =
+//   "cloudinary://437741655674911:BJk-ociOBpdvGhtYgiRWegpqitU@friendindeed"
+
+  export const CLOUDINARY_URL =
+  "cloudinary://951161524562398:fLRFajsl8G6zcRWgt9UvRXPojPU@dlxnkk7wr"
+
 
 export enum ROUTES {
   HOME = "",

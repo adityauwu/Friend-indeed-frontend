@@ -1,3 +1,4 @@
+import { AntAnchor } from 'antd/lib/anchor/Anchor';
 import { API } from '../shared/utils/helper';
 
 
@@ -20,3 +21,9 @@ export const getUserMood = (userId: string) => API.get(`/mood/GetMood/${userId}`
 
 
 //export const addMessage = (data: any) => API.post('/message/', data);
+
+
+//feedback route
+export const saveFeedback = ( info: any) => API.post(`/feedback`, info);
+export const deleteFeedback = (id : any) => API.delete(`/feedback/${id}`)
+export const getFeedback = (id : any) => API.get(`/feedback/${id}/therapist?role=Therapist`)

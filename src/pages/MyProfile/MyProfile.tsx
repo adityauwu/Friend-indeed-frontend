@@ -17,6 +17,7 @@ import { completePaymentAsync, fetchPatientProfileAsync, fetchTherapistProfileAs
 import { useDispatch } from 'react-redux';
 import { Link, useSearchParams } from 'react-router-dom';
 import { EditProfile, Feedback } from './components';
+import { deleteFeedback, getFeedback } from '../../api/MessageRequests';
 
 function MyProfile() {
 
@@ -38,7 +39,10 @@ function MyProfile() {
   const therapistViewsSelf: boolean = !therapistId && userIsTherapist
 
   const [openFeedbackModal, setOpenFeedbackModal] = useState(false)
+
   const [openEditForm, setOpenEditForm] = useState(false || editProfile)
+  const [newFeedbackAdded, setNewFAdded] = useState(false);
+  const [feedbacks , setFeedbacks] = useState([{} as any])
 
   const openModal = () => setOpenFeedbackModal(true)
   const closeModal = () => setOpenFeedbackModal(false)
@@ -106,15 +110,65 @@ function MyProfile() {
     paymentObject.open();
 }
 
+const deleteFeedbackfn =async (id: any)=>{
+  try{
+    const data =  await deleteFeedback(id);
+    console.log(data);
+    setNewFAdded(true);
+  
+  }
+catch(err){
+  console.log(err);
+}
+
+
+}
+
   useEffect(() => {
     if(patientViewsTherapist || editProfile){
       dispatch(fetchTherapistProfileAsync(String(therapistId)))
+     
     } else if (therapistViewsSelf) {
-      dispatch(fetchTherapistProfileAsync(currentUser.id))
+      console.log("here")
+      dispatch(fetchTherapistProfileAsync(String(currentUser.id)))
+      //  console.log(data?.feedback)
+      // if(data?.feedback){
+      // //console.log(data?.feedback)
+      // setFeedbacks(data?.feedback)
+      // }
+    
     } else {
       dispatch(fetchPatientProfileAsync(currentUser.id))
     }
+    
+    setNewFAdded(true);
   }, [userIsTherapist, therapistId, editProfile])
+
+  useEffect(()=>{
+    const addfeed =async (id: any)=>{
+      try{
+        const data = await getFeedback(String(id))
+        console.log(data)
+        setFeedbacks(data.data.data)
+  
+      }
+      catch(err){
+        console.log(err);
+      }
+    
+    }
+    
+    if(patientViewsTherapist){
+    
+      addfeed(therapistId);
+  }
+  else if(therapistViewsSelf){
+    addfeed(currentUser?.id)
+  }
+    
+  setNewFAdded(false); 
+},[newFeedbackAdded])
+
 
   return (
     <Container>
@@ -169,12 +223,12 @@ function MyProfile() {
             <Title level={2} style={{ color: theme.copperBlue }}>Profile</Title>
             <P>{data?.name}</P>
             <P>{data?.email}</P>
-            {userIsTherapist && (
+            {(
               <>
                 {!!data?.about && <P><blockquote>{`About Myself : ${data?.about}`}</blockquote></P>}
                 {!!data?.qualification && data?.qualification?.map((q: string) => <P>{q}</P>)}
                 {!!data?.experience && <P>{`${data?.experience} years of experience`}</P>}
-                {!!data?.bookingUrl && (
+                {!!data?.bookingUrl &&  userIsTherapist && (
                   <P>
                     <Link to={data?.bookingUrl} target='_blank'>Booking Link</Link>
                   </P>
@@ -202,17 +256,17 @@ function MyProfile() {
             <StyledAntSkeleton loading={loading} active={loading}>
               <Title level={2} style={{ color: theme.copperBlue, display: 'flex' }}>
                 Feedback/Rating
-                <Button
+                { patientViewsTherapist &&(<Button
                   name='Add'
                   width={10}
                   // height={30}
                   onClick={() => setOpenFeedbackModal(true)}
-                />
+                />)}
               </Title>
               <List
                 header={`${data?.feedback?.length || 0} ratings`}
                 itemLayout='horizontal'
-                dataSource={data?.feedback}
+                dataSource={feedbacks}
                 renderItem={item => (
                   <Comment
                     author={(
@@ -224,11 +278,11 @@ function MyProfile() {
                     avatar={item?.patient?.imageUrl || DEFAULT_PROFILE_URL}
                     content={item.comment}
                     datetime={new Date(item.createdAt).toUTCString()}
-                    actions={patientViewsSelf ? [
-                      <span key="comment-edit" onClick={openModal}>Edit</span>,
+                    actions={(patientViewsTherapist && currentUser?.id == item?.patient?.id)? [
+                      //<span key="comment-edit" onClick={openModal}>Edit</span>,
                       <Popconfirm
                         title='Do you confirm deleting this rating ?'
-                        onConfirm={() => null}
+                        onConfirm={() => deleteFeedbackfn(item?.id)}
                         {...modalStyles}
                       >
                         <span key="comment-delete">Delete</span>
@@ -322,6 +376,9 @@ function MyProfile() {
         <Feedback
           open={openFeedbackModal}
           closeModal={closeModal}
+          therapistId ={therapistId}
+          patientId ={currentUser.id} 
+          setnewFAdded = {setNewFAdded}
         />
       )}
       {openEditForm && (
@@ -329,6 +386,7 @@ function MyProfile() {
           visible={openEditForm}
           onClose={closeDrawer}
           user={data}
+         
           userIsTherapist={userIsTherapist}
         />
       )}
