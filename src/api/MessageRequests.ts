@@ -27,3 +27,10 @@ export const getUserMood = (userId: string) => API.get(`/mood/GetMood/${userId}`
 export const saveFeedback = ( info: any) => API.post(`/feedback`, info);
 export const deleteFeedback = (id : any) => API.delete(`/feedback/${id}`)
 export const getFeedback = (id : any) => API.get(`/feedback/${id}/therapist?role=Therapist`)
+
+
+//chatSuscbription routes
+
+export const checkSubscription = (userId:string, therapistId: string) => API.get(`/chatsubscription/find/${therapistId}?userId=${userId}`)
+export const  chatUnSubscribe = (patientId:string, therapistId:string) => API. delete(`/chatsubscription/unSubscribeChat/${therapistId}?patientId=${patientId}`)
+export const chatSubscribe = (patientId:string, therapistId:string) =>  API.post(`/chatsubscription/subscribe/${therapistId}?patientId=${patientId}`) 

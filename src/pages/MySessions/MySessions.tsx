@@ -8,7 +8,7 @@ import theme from "../../shared/utils/theme"
 import { FilterBar, UpcomingMeetings, YourClients } from "../Home/components"
 import { useAppSelector } from "../../redux/hooks"
 
-import { fetchUpcomingMeetingsAsync, selectData } from '../Home/Home.slice';
+import {  selectData } from '../Home/Home.slice';
 import { User } from '../MyProfile/MyProfile.slice';
 import { ROUTES, STORAGE_USER_CONSTANT } from '../../shared/utils/constants';
 import { useDispatch } from "react-redux"

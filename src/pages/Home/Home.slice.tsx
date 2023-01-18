@@ -8,11 +8,29 @@ import { TherapistInfoCardProps } from './components/TherapistInfoCard/Therapist
 import { FriendInfoCardProps } from './components/FriendInNeedCard/FriendInNeedCard';
 
 export type MeetingCardProps = {
-  date: string,
-  time: string,
-  title: string,
-  meetingLink: string,
+  date?: string,
+  time?: string,
+  title?: string,
+  meetingLink?: string,
+  orderId?: string,
+  createdAt?: any,
+  patient?: any,
+  therapist?: any
+
 }
+
+
+export type MeetingCardProps2 = {
+  date?: string,
+  time?: string,
+  title?: string,
+  meetingLink: string,
+  orderId?: string,
+  createdAt?: any,
+  patientId?:any,
+  therapistId?:any
+}
+
 
 export type CategoryProps = {
   id: string,
@@ -47,11 +65,15 @@ export type Patient = {
 }
 
 export interface HomeState {
+ 
   data: TherapistInfoCardProps[];
   dataCount: number;
   categories: CategoryProps[];
   upcomingMeetings: MeetingCardProps[];
-  patients: Patient[];
+  upcomingMeets : MeetingCardProps2[];
+  yourClients: any[];
+ 
+  patients: any[];
   patientsToFollow : FriendInfoCardProps[];
   filters: TherapistDataFilters;
   patientFilters :PatientDataFilters;
@@ -65,6 +87,9 @@ const initialState: HomeState = {
   dataCount: 0,
   categories: [],
   upcomingMeetings: [],
+  upcomingMeets: [],
+  yourClients:[],
+  
   patients: [],
   patientsToFollow:[],
   currentUser: null,
@@ -137,35 +162,77 @@ export const fetchCategoriesAsync = createAsyncThunk(
   }
 );
 
-export const fetchUpcomingMeetingsAsync = createAsyncThunk(
-  'upcomingMeetings/fetchData',
-  async (
-    { userId, role }: { userId: string, role: User},
-    { rejectWithValue }
-  ) => {
+
+
+
+export const fetchUpcomingMeetsAsync = createAsyncThunk(
+  'upcomingMeets/fetchData',
+  async ( ) => {
     try {
-      const { data } = await API.get(`booking/${userId}/upcoming-meetings`, {
-        params: { role }
-      })
-      if(data?.success) {
-        return data?.data
+      const currentUser = JSON.parse(String(localStorage.getItem(STORAGE_USER_CONSTANT)))
+      const response =  await API.get(`/booking/${currentUser.id}/upcoming-meetings?role=${currentUser.role}`)
+      console.log(response)
+      if(response.data.success) {
+        return response.data?.data;
       } else {
-        rejectWithValue(data?.error)
+        console.log(response.data.error)
+        return (response.data.error)
       }
     } catch (e: any) {
-      rejectWithValue(e?.response?.data)
+      console.log(e?.response?.data?.message)
+      return(e?.response?.data?.message)
     }
   }
 )
 
+
+// export const fetchUpcomingMeetingsAsync = createAsyncThunk(
+//   'upcomingMeetings/fetchData',
+//   async (
+//     { user}: { user: any},
+//     { rejectWithValue }
+//   ) => {
+//     try {
+//       const { data } = await API.get(`/booking/${user.id}/upcoming-meetings?role=${user.role}`)
+//      console.log(data);
+//       if(data?.success) {
+//         return data?.data
+//       } else {
+//         rejectWithValue(data?.error)
+//       }
+//     } catch (e: any) {
+//       rejectWithValue(e?.response?.data)
+//     }
+//   }
+// )
+
+// export const fetchPatientsAsync = createAsyncThunk(
+//   'patients/fetchData',
+//   async (patientName: string, { rejectWithValue }) => {
+//     try {
+//       const currentUser = JSON.parse(String(localStorage.getItem(STORAGE_USER_CONSTANT)))
+//       const response = await API.get(`therapist/${currentUser.id}/patients`, {
+//         params: { patientName }
+//       })
+//       if(response.data.success) {
+//         return response.data?.data;
+//       } else {
+//         rejectWithValue(response.data.error)
+//       }
+//     } catch (e: any) {
+//       rejectWithValue(e?.response?.data?.message)
+//     }
+//   }
+// )
+
+
 export const fetchPatientsAsync = createAsyncThunk(
   'patients/fetchData',
-  async (patientName: string, { rejectWithValue }) => {
+  async (user: any, { rejectWithValue }) => {
     try {
-      const currentUser = JSON.parse(String(localStorage.getItem(STORAGE_USER_CONSTANT)))
-      const response = await API.get(`therapist/${currentUser.id}/patients`, {
-        params: { patientName }
-      })
+      
+      const response = await API.get(`/chatsubscription/${user.id}/fetchChatSubscription?role=${user.role}`)
+      
       if(response.data.success) {
         return response.data?.data;
       } else {
@@ -176,6 +243,63 @@ export const fetchPatientsAsync = createAsyncThunk(
     }
   }
 )
+
+
+
+export const fetchPatients2Async = createAsyncThunk(
+  'patientsclients/fetchData',
+  async (user:any) => {
+    console.log("here in home slice tring to fetch patients")
+    try {
+      
+      const { data } = await API.get(`/chatsubscription/${user.id}/fetchChatSubscription?role=${user.role}`)
+      if(data.success) {
+        console.log('The patients that have subscribed are as follows---->')
+        console.log(data)
+        return data
+      } else {
+        return data?.error
+      }
+    } catch (err: any) {
+      return err?.response?.data
+    }
+  }
+)
+
+
+export const fetchUpcomingMeetingsAsync = createAsyncThunk(
+  'upcomingMeetings/fetchData',
+  async () => {
+    const response = await new Promise<{ data: MeetingCardProps[] }>((resolve) =>
+    setTimeout(() => resolve({ 
+      data:  [
+        {
+          date: "25 Jan",
+          time: "04: 00pm",
+          title: "Session between Lakshitha & Dr.Khanchandani",
+          meetingLink: "https://meet.google.com/zwb-koam-dgs",
+        },
+        {
+          date: "04 Feb", 
+          time: "01: 00pm",
+          title: "Session between Lakshitha & Dr.Mohini",
+          meetingLink: "https://meet.google.com/zwb-koam-dgs",
+        },
+        {
+          date: "16 Feb",
+          time: "05: 00pm",
+          title: "Session between Lakshitha & Dr.Parag",
+          meetingLink: "https://meet.google.com/zwb-koam-dgs",
+        }
+      ]
+    }), 1000)
+
+    );
+    return response.data
+  }
+)
+
+
 
 export const homeSlice = createSlice({
   name: 'therapists',
@@ -219,14 +343,14 @@ export const homeSlice = createSlice({
         state.status = 'idle'
         state.categories = action.payload;
       });
-    builder
-      .addCase(fetchUpcomingMeetingsAsync.pending, (state) => {
-        state.status = 'meetingsloading'
-      })
-      .addCase(fetchUpcomingMeetingsAsync.fulfilled, (state, action) => {
-        state.status = 'idle'
-        state.upcomingMeetings = action.payload;
-      });
+    // builder
+    //   .addCase(fetchUpcomingMeetingsAsync.pending, (state) => {
+    //     state.status = 'meetingsloading'
+    //   })
+    //   .addCase(fetchUpcomingMeetingsAsync.fulfilled, (state, action) => {
+    //     state.status = 'idle'
+    //     state.upcomingMeetings = action.payload;
+    //   });
     builder
       .addCase(fetchPatientsAsync.pending, (state) => {
         state.status = 'patientsLoading'
@@ -245,6 +369,31 @@ export const homeSlice = createSlice({
         state.patientsToFollow = action.payload?.data?.data;
         state.dataCount = action.payload?.count
       });
+      builder
+      .addCase(fetchUpcomingMeetsAsync.pending, (state) => {
+        state.status = 'meetingsloading'
+      })
+      .addCase(fetchUpcomingMeetsAsync.fulfilled, (state, action) => {
+        state.status = 'idle'
+        state.upcomingMeets = action.payload;
+      });
+      builder
+      .addCase(fetchUpcomingMeetingsAsync.pending, (state) => {
+        state.status = 'meetingsloading'
+      })
+      .addCase(fetchUpcomingMeetingsAsync.fulfilled, (state, action) => {
+        state.status = 'idle'
+        state.upcomingMeetings = action.payload;
+      });
+      builder
+      .addCase(fetchPatients2Async.pending, (state) => {
+        state.status = 'patientsLoading'
+      })
+      .addCase(fetchPatients2Async.fulfilled, (state, action) => {
+        state.status = 'idle'
+        state.yourClients = action.payload;
+      });
+      
 
   },
 });

@@ -1,68 +1,70 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { RootState } from '../../redux/store';
+import { STORAGE_USER_CONSTANT } from '../../shared/utils/constants';
 import { API } from '../../shared/utils/helper';
-import { TherapistInfoCardProps } from './components/TherapistInfoCard/TherapistInfoCard';
+
 
 export type MeetingCardProps = {
   date: string,
   time: string,
   title: string,
   meetingLink: string,
+  orderId?: string,
+  createdAt?: any,
+  patientId?:any,
+  therapistId?:any
 }
 
-export type CategoryProps = {
-  id: string,
-  name: string,
-  active: boolean,
-  createdAt: string,
-  updatedAt: string,
+
+export type MeetingCardProps2 = {
+  date?: string,
+  time?: string,
+  title?: string,
+  meetingLink: string,
+  orderId?: string,
+  createdAt?: any,
+  patientId?:any,
+  therapistId?:any
 }
 
-export type TherapistDataFilters = {
-  category?: string,
-  experience?: number,
-  rating?: number,
-  fee?: number
-}
 
 export interface HomeState {
-  data: TherapistInfoCardProps[];
-  categories: CategoryProps[];
+  
+
   upcomingMeetings: MeetingCardProps[];
-  filters: TherapistDataFilters;
+
+
+  upcomingMeets: MeetingCardProps2[];
+  
   status: 'idle' | 'therapistsloading' | 'categoriesloading' | 'meetingsloading' | 'failed';
 }
 
-const initialState: HomeState = {
-  data: [],
-  categories: [],
+export const initialState: HomeState = {
+  
   upcomingMeetings: [],
-  filters: {
-    category: undefined,
-    experience: undefined,
-    rating: undefined,
-    fee: undefined,
-  },
+
+  upcomingMeets: [],
+ 
   status: 'idle',
 };
 
-export const fetchTherapistsAsync = createAsyncThunk(
-  'therapists/fetchData',
-  async (filters: TherapistDataFilters) => {
-    console.log(filters)
-    const response = await API.get('/therapist',{ params: filters });
-    return response.data?.data;
-  }
-);
+// export const fetchTherapistsAsync = createAsyncThunk(
+//   'therapists/fetchData',
+//   async (filters: TherapistDataFilters) => {
+//     console.log(filters)
+//     const response = await API.get('/therapist',{ params: filters });
+//     return response.data?.data;
+//   }
+// );
 
-export const fetchCategoriesAsync = createAsyncThunk(
-  'categories/fetchData',
-  async () => {
-    const response = await API.get('/category');
-    return response.data?.data;
-  }
-);
+// export const fetchCategoriesAsync = createAsyncThunk(
+//   'categories/fetchData',
+//   async () => {
+//     const response = await API.get('/category');
+//     return response.data?.data;
+//   }
+// );
 
 export const fetchUpcomingMeetingsAsync = createAsyncThunk(
   'upcomingMeetings/fetchData',
@@ -96,44 +98,77 @@ export const fetchUpcomingMeetingsAsync = createAsyncThunk(
   }
 )
 
-export const homeSlice = createSlice({
-  name: 'therapists',
+
+
+export const fetchUpcomingMeetsAsync = createAsyncThunk(
+  'upcomingMeets/fetchData',
+  async ( ) => {
+    try {
+      const currentUser = JSON.parse(String(localStorage.getItem(STORAGE_USER_CONSTANT)))
+      const response =  await API.get(`/booking/${currentUser.id}/upcoming-meetings?role=${currentUser.role}`)
+      console.log(response)
+      if(response.data.success) {
+        return response.data?.data;
+      } else {
+        console.log(response.data.error)
+        return (response.data.error)
+      }
+    } catch (e: any) {
+      console.log(e?.response?.data?.message)
+      return(e?.response?.data?.message)
+    }
+  }
+)
+
+
+
+
+
+export const meetingsSlice = createSlice({
+  name: 'meetings',
   initialState,
   reducers: {
-    setFilters: (state, action) => {     
-      state.filters = action.payload
-    }
+    
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTherapistsAsync.pending, (state) => {
-        state.status = 'therapistsloading';
-      })
-      .addCase(fetchTherapistsAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.data = action.payload;
-      })
-    builder
-      .addCase(fetchCategoriesAsync.pending, (state) => {
-        state.status = 'categoriesloading'
-      })
-      .addCase(fetchCategoriesAsync.fulfilled, (state, action) => {
-        state.status = 'idle'
-        state.categories = action.payload;
-      });
-    builder
+    //   .addCase(fetchTherapistsAsync.pending, (state) => {
+    //     state.status = 'therapistsloading';
+    //   })
+    //   .addCase(fetchTherapistsAsync.fulfilled, (state, action) => {
+    //     state.status = 'idle';
+    //     state.data = action.payload;
+    //   })
+    // builder
+    //   .addCase(fetchCategoriesAsync.pending, (state) => {
+    //     state.status = 'categoriesloading'
+    //   })
+    //   .addCase(fetchCategoriesAsync.fulfilled, (state, action) => {
+    //     state.status = 'idle'
+    //     state.categories = action.payload;
+    //   });
+    // builder
       .addCase(fetchUpcomingMeetingsAsync.pending, (state) => {
         state.status = 'meetingsloading'
       })
       .addCase(fetchUpcomingMeetingsAsync.fulfilled, (state, action) => {
         state.status = 'idle'
         state.upcomingMeetings = action.payload;
+      })
+
+      builder
+      .addCase(fetchUpcomingMeetsAsync.pending, (state) => {
+        state.status = 'meetingsloading'
+      })
+      .addCase(fetchUpcomingMeetsAsync.fulfilled, (state, action) => {
+        state.status = 'idle'
+        state.upcomingMeets = action.payload;
       });
   },
 });
 
-export const { setFilters } = homeSlice.actions;
+// export const { setFilters } = homeSlice.actions;
 
 export const selectData = (state: RootState) => state.home;
 
-export default homeSlice.reducer;
+export default meetingsSlice.reducer;

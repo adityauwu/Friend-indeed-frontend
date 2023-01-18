@@ -155,6 +155,7 @@ export const completePaymentAsync = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      console.log("!-----Verfying payment please wait---!")
       const { data } = await API.post(`/payment/verification`, {
         ...input
       })

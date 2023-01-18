@@ -10,6 +10,8 @@ type ButtonProps = {
   onClick?: MouseEventHandler<HTMLElement> | undefined,
   width: number,
   height?: number,
+  marginLeft?: number,
+  marginTop?: number,
   buttonFontSize?: number,
   description?: string,
   extraProps?: any,
@@ -21,12 +23,14 @@ function Button({
   onClick,
   width,
   height,
+  marginTop,
+  marginLeft,
   buttonFontSize,
   description,
   extraProps
 }: ButtonProps) {
   return (
-    <StyledBtn type='primary' {...{ width, height, onClick, ...extraProps }} >
+    <StyledBtn type='primary' {...{ width, height, marginTop,marginLeft, onClick, ...extraProps }} >
       <>
         {!!icon && icon}
         <P icon={!!icon} size={buttonFontSize}>{name}</P>
@@ -38,10 +42,12 @@ function Button({
 
 export default Button;
 
-const StyledBtn = styled(Btn)<{ width: number, height?: number }>`
+const StyledBtn = styled(Btn)<{ width: number, height?: number, marginTop?:number, marginLeft?:number }>`
   background: ${theme.copperBlue};
   border: 0;
   border-radius: 50px;
+  margin-left: ${props => props.marginLeft? props.marginLeft: 0}%;
+  margin-top: ${props => props.marginTop? props.marginTop: 0}px;
   height: ${props => props.height? props.height: 40}px;
   width: ${props => props.width}%;
   display: flex;
@@ -60,6 +66,31 @@ const StyledBtn = styled(Btn)<{ width: number, height?: number }>`
     border: 0;
   }
 `;
+
+
+
+// const StyledBtn2 = styled(Btn)<{ width: number, height?: number }>`
+//   background: ${theme.copperBlue};
+//   border: 0;
+//   border-radius: 50px;
+//   height: ${props => props.height? props.height: 40}px;
+//   width: ${props => props.width}%;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+
+
+//   &:hover {
+//     background-color: rgba(7, 48, 66, 0.6);
+//     border: 0;
+//   }
+
+//   &:active {
+//     background-color: rgba(7, 48, 66, 0.6);
+//     border: 0;
+//   }
+// `;
 
 const P = styled(Typography.Text)<{ size?: number, icon?: boolean }>`
   font-family: DM Sans;

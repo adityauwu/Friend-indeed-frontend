@@ -8,5 +8,6 @@ export default {
   link: "#009DFF",
   lightblue: "#EDF6FF",
   brightBlue: "#74b9ff",
-  chip: "#E5E5E5"
+  chip: "#E5E5E5",
+  lightPrimary: "#eff7cf"
 }

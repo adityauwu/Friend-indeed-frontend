@@ -1,13 +1,17 @@
 .message {
   display: flex;
   text-align: left;
-
+ 
   &.sent {
     flex-direction: row-reverse;
     text-align: right;
     .message__content {
-      color: #252525;
-      background-color: rgb(134, 191, 91);
+      color: white;
+      background-color: #073042;
+      //border-bottom: 1px solid #ffffff;
+      //border-left: 1px solid #ffffff;
+      border-radius: 20px 0px 20px 20px;
+      box-shadow: black;
       &__text {
         padding: 0px 8px 0 8px;
       }
@@ -18,8 +22,14 @@
   }
   &.received {
     .message__content {
-      background: rgb(106, 223, 113);
-      color: #252525;
+      background-color: #ffffff;
+      color:black;
+      
+      border-bottom: 0.5px solid #073042;
+      border-right: 0.5px solid #073042;
+      
+
+      border-radius: 0px 20px 20px 20px;
       &__text {
         padding: 0px 16px 0 8px;
       }
@@ -46,10 +56,14 @@
     }
     &__text {
       text-align: left;
+      margin-top: 5px;
+      font-size: 0.80rem;
+      font-weight: 540;
     }
     &__at {
-      margin-top: -3px;
-      font-size: 0.725rem;
+      margin-top: 5px;
+      text-align: right;
+      font-size: 0.60rem;
     }
   }
 }

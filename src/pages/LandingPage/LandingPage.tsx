@@ -48,7 +48,7 @@ function LandingPage() {
             </ButtonGroup>
           </CenterWrap>
         </Info>
-        <Hero src={require("../../shared/assets/Home-Hero.png")} loading = "lazy" width={450} height={450} alt="Hero image" />
+        <Hero src={require("../../shared/assets/Home-Hero.png")} loading = "lazy"  alt="Hero image" />
       </Container>
       <HowToBook />
       <ForTherapists />

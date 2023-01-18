@@ -8,7 +8,7 @@ import "./styles.scss";
 import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "../../redux/hooks";
-import { selectData,TherapistList } from "../../pages/MyChats/MyChats.slice";
+import { fetchRecievers, selectData,TherapistList } from "../../pages/MyChats/MyChats.slice";
 interface Props {
   user: any;
   contacts: any;
@@ -40,7 +40,8 @@ export default function MenuContent(props: Props) {
   const TherapistListData=useAppSelector(selectData);
   //const [conversationLocal,setconversationLocal] = useState([]);
   useEffect(() => {
-   
+    console.log(user)
+    dispatch(fetchRecievers(user))
     dispatch(TherapistList());
  
   },[]);
@@ -76,7 +77,8 @@ export default function MenuContent(props: Props) {
       </Menu.Item>
     </Menu>
   );
-
+  
+  console.log(TherapistListData)
   return (
     <>
       {loading ? (
@@ -111,18 +113,20 @@ export default function MenuContent(props: Props) {
               </span>
             </div>
 
-            <Dropdown.Button
+            {/* <Dropdown.Button
               overlay={menu}
               icon={<MoreOutlined style={{ fontSize: "1.65rem" }} />}
-            />
+            /> */}
           </header>
           <div className="tabs-container">
             <Tabs defaultActiveKey="1" centered>
+              
               <Tabs.TabPane tab="Coversations" key="1">
                 <ConversationsTab
                   contacts={contacts}
                   conversations={TherapistListData}
                   handleSelectChat={handleSelectChat}
+                  currentUserRole = {user.role}
                 />
               </Tabs.TabPane>
               {/* <Tabs.TabPane tab="Contacts" key="2">

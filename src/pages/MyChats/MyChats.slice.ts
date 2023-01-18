@@ -23,9 +23,21 @@ export interface TherapistState{
 
 }
 
+
+export interface RecieverState{
+  id: string;
+  name: string;
+  email: string;
+  imageUrl?: string;
+  status: 'idle' | 'loading' | 'failed';
+  error: string | null;
+
+}
+
 export interface ProfileState {
   data:  ChatState | null;
   therapistList: TherapistState[];
+  recieverList : RecieverState[];
   chatList : any[];
 
   status: 'idle' | 'loading' | 'failed';
@@ -35,6 +47,7 @@ export interface ProfileState {
 const initialState: ProfileState = {
   data: null,
   therapistList: [],
+  recieverList:[],
   chatList: [],
   status: 'idle',
   error: null
@@ -97,6 +110,29 @@ export const TherapistList = createAsyncThunk(
     return response.data
   }
 )
+
+
+
+
+export const fetchRecievers = createAsyncThunk(
+  'chat/getfetchRecievers',
+ 
+  async (user : any) => {
+    try {
+      const { data } = await API.get(`/chatsubscription/${user.id}/fetchChatSubscription?role=${user.role}`)
+      if(data.success) {
+        console.log('The reciever list is as follows---->')
+        console.log(data)
+        return data?.data
+      } else {
+        return data?.error
+      }
+    } catch (err: any) {
+      return err?.response?.data
+    }
+  }
+     
+  )
 
 
 
@@ -184,6 +220,17 @@ export const chatSlice = createSlice({
         state.chatList= action.payload
       })
       .addCase(fetchConversation.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = String(action.payload)
+      })
+      .addCase(fetchRecievers.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(fetchRecievers.fulfilled, (state, action) => {
+        state.status = 'idle'
+        state.recieverList= action.payload
+      })
+      .addCase(fetchRecievers.rejected, (state, action) => {
         state.status = 'failed'
         state.error = String(action.payload)
       })

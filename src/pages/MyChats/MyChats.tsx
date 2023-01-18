@@ -120,7 +120,8 @@ const MenuCard = styled.div`
   position: relative;
    display: flex;
   overflow: hidden;
-  border-right: 1px solid #cccccc;
+  background-color : white;
+  border-right: 1px solid #d9d9d9;
 
   `
 const AppContainer = styled.div`
@@ -130,7 +131,7 @@ const AppContainer = styled.div`
   display: flex;
   
   overflow: hidden;
-  border: 1px solid black;
+
 `
 const StyledTag = styled(Tag)`
   border-radius: 15px;

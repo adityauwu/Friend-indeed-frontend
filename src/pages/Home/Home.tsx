@@ -60,7 +60,7 @@ const Home = () => {
   
   
   
-  const upcomingMeetings = [
+  const ToDoList = [
     { createdAt:"asdasd",
       meetingLink: "asdasd",
       task: "Meditate for 5 Minutes and do basic Yoga",
@@ -110,7 +110,7 @@ const Home = () => {
           >
             Yours Today's Tasks!
           </Typography.Title>
-          {upcomingMeetings.map((meeting: any, i) => (
+          {ToDoList.map((meeting: any, i) => (
             <MeetingCard key={`meeting-card-${i}`}>
               <Timeslot>
                 <p>

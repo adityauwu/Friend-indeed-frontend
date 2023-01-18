@@ -5,7 +5,7 @@ import { Typography } from 'antd'
 import Skeleton from 'react-loading-skeleton'
 
 import { useAppSelector } from '../../../../redux/hooks';
-import { fetchUpcomingMeetingsAsync, selectData } from '../../HomeSlice';
+import { fetchUpcomingMeetingsAsync, fetchUpcomingMeetsAsync, selectData } from '../../Home.slice';
 import theme from '../../../../shared/utils/theme';
 import { User } from '../../../MyProfile/MyProfile.slice';
 import AuthContext from '../../../../shared/context/AuthContext';
@@ -28,7 +28,12 @@ const UpcomingMeetings: FC = () => {
   
   useEffect(() => {
     dispatch(fetchUpcomingMeetingsAsync())
+    dispatch(fetchUpcomingMeetsAsync())
+
+   
   },[])
+  console.log("Here is the retrieved object from upcoming meets------>")
+  console.log(state?.upcomingMeets)
   return (
     <Container>
 
@@ -46,7 +51,9 @@ const UpcomingMeetings: FC = () => {
           count={3}
           baseColor={theme.copperBlue}
         />
-      ): state?.upcomingMeetings.map((meeting: any, i) => (
+      ):
+      <>
+       { state?.upcomingMeets.map((meeting: any, i) => (
         <MeetingCard key={`meeting-card-${i}`}>
           <Timeslot>
             <p>
@@ -54,20 +61,62 @@ const UpcomingMeetings: FC = () => {
                 month: 'short',
                 day: '2-digit',
               })}
-            </p>
-            <p>
-              {new Date(meeting.createdAt).toLocaleTimeString(undefined, {
+            ::
+            {new Date(meeting.createdAt).toLocaleTimeString(undefined, {
                 hour: 'numeric',
                 minute: '2-digit'
               })}
-            </p>
+           </p>
           </Timeslot>
           <TitleCard>
-            <Title>{meeting.title}</Title>
-            <Link href={meeting.meetingLink} target='_blank'>Join Now</Link>
+            <Title>Session between Dr.{meeting.therapist.name} and {meeting.patient.name}</Title>
+            <Link href={meeting.therapist.googleMeetUrl} target='_blank'>Join Now</Link>
           </TitleCard>
         </MeetingCard>
-        ))
+        ))}
+
+       <MeetingCard key={`meeting-card-45q`}>
+          <Timeslot>
+            <p>
+           
+              {new Date().toLocaleDateString(undefined, {
+                month: 'short',
+                day: '2-digit',
+              })}
+            ::
+            {new Date().toLocaleTimeString(undefined, {
+                hour: 'numeric',
+                minute: '2-digit'
+              })}
+           </p>
+          </Timeslot>
+          <TitleCard>
+            <Title>Session between Dr. Vijay Testing and  Test User</Title>
+            <Link href={ 'www.google.com'} target='_blank'>Join Now</Link>
+          </TitleCard>
+        </MeetingCard>
+
+        <MeetingCard key={`meeting-card-34q}`}>
+          <Timeslot>
+            <p>
+             
+              {new Date().toLocaleDateString(undefined, {
+                month: 'short',
+                day: '2-digit',
+              })}
+            ::
+            {new Date().toLocaleTimeString(undefined, {
+                hour: 'numeric',
+                minute: '2-digit'
+              })}
+           </p>
+          </Timeslot>
+          <TitleCard>
+            <Title>Session between Dr.Vishaka test and test user 2</Title>
+            <Link href={'www.google.com'} target='_blank'>Join Now</Link>
+          </TitleCard>
+        </MeetingCard>
+        </>
       }
     </Container>
   );
@@ -124,6 +173,7 @@ const Timeslot = styled.div`
   background-color: white;
   border-radius: 12px;
   text-align: center;
+  
   color: ${theme.copperBlue};
 `;
 

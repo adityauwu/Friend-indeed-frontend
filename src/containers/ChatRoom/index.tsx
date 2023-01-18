@@ -12,6 +12,7 @@ import { fetchConversation, selectData } from "../../pages/MyChats/MyChats.slice
 import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import { addMessages, getMessages } from "../../api/MessageRequests";
+import { ROUTES } from "../../shared/utils/constants";
 
 interface Props {
   user: any;
@@ -213,37 +214,22 @@ if (receivedMessage !== null && receivedMessage.senderId === selectedChat.id && 
     <Menu>
       <Menu.Item
         key="1"
-        onClick={() => {
-          handleChangeNameDialog();
-        }}
+        onClick={() => window.location.href=`${ROUTES.MY_PROFILE}?userId=${selectedChat.id}`
+          
+        }
       >
-        Edit group name
+        View Profile
       </Menu.Item>
-      <Menu.Item
-        key="2"
-        onClick={() => {
-          handleChangingGroupImage();
-        }}
-      >
-        Change group icon
-      </Menu.Item>
+    
       <Menu.Item
         key="3"
         onClick={() => {
           // removeGroupImage(selectedChat.id);
         }}
       >
-        Remove group icon
+        Unsubscribe
       </Menu.Item>
-      <Menu.Item
-        key="4"
-        onClick={() => {
-          // deleteGroup(selectedChat.id);
-          handleSelectChat(null);
-        }}
-      >
-        Exit group
-      </Menu.Item>
+      
     </Menu>
   );
 
@@ -257,10 +243,13 @@ if (receivedMessage !== null && receivedMessage.senderId === selectedChat.id && 
               style={{
                 backgroundSize: "cover",
                 backgroundPosition: "center",
+                backgroundImage: `url('${selectedChat.imageUrl}')`
+
               }}
             >
-              {selectedChat.photoURL ? "" : ""}
+              {selectedChat.imageUrl ? "" : ""}
             </div>
+            
             <span>{selectedChat.name}</span>
             <Dropdown.Button
               overlay={menu}

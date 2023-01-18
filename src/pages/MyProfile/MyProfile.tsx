@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Skeleton from 'react-loading-skeleton';
-import { CalendlyEventListener, DateAndTimeSelectedEvent, PopupButton } from 'react-calendly'
+
+import { CalendlyEventListener, DateAndTimeSelectedEvent, EventScheduledEvent, PopupButton } from 'react-calendly'
 import {
   Row, Col, Image, Typography, List, Comment, Rate,
-  Popconfirm, Skeleton as AntSkeleton, Upload, Tag
+  Popconfirm, Skeleton as AntSkeleton, Upload, Tag,Button as Btn
 } from 'antd'
 import { UploadOutlined, EditFilled } from '@ant-design/icons'
 
 import PageHeader from '../../shared/components/PageHeader';
-import { DEFAULT_PROFILE_URL, STORAGE_USER_CONSTANT } from '../../shared/utils/constants';
+import { DEFAULT_PROFILE_URL, STORAGE_KEY_CONSTANT, STORAGE_USER_CONSTANT } from '../../shared/utils/constants';
 import { Button } from '../../shared/components';
 import theme from '../../shared/utils/theme';
 import { useAppSelector } from '../../redux/hooks';
@@ -17,7 +18,9 @@ import { completePaymentAsync, fetchPatientProfileAsync, fetchTherapistProfileAs
 import { useDispatch } from 'react-redux';
 import { Link, useSearchParams } from 'react-router-dom';
 import { EditProfile, Feedback } from './components';
-import { deleteFeedback, getFeedback } from '../../api/MessageRequests';
+import { chatSubscribe, chatUnSubscribe, checkSubscription, deleteFeedback, getFeedback } from '../../api/MessageRequests';
+import axios from 'axios';
+import { current } from '@reduxjs/toolkit';
 
 function MyProfile() {
 
@@ -39,7 +42,7 @@ function MyProfile() {
   const therapistViewsSelf: boolean = !therapistId && userIsTherapist
 
   const [openFeedbackModal, setOpenFeedbackModal] = useState(false)
-
+  //const [hasClickedSubscribed,sethasClickedSubs] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false || editProfile)
   const [newFeedbackAdded, setNewFAdded] = useState(false);
   const [feedbacks , setFeedbacks] = useState([{} as any])
@@ -47,6 +50,10 @@ function MyProfile() {
   const openModal = () => setOpenFeedbackModal(true)
   const closeModal = () => setOpenFeedbackModal(false)
   const closeDrawer = () => setOpenEditForm(false)
+  const token = localStorage.getItem(STORAGE_KEY_CONSTANT)
+  const [hasClickedSubscribed,sethasClickedSubs] = useState(false);
+  const [isChatSubd, setChatSubd] = useState(false);
+  
 
   function loadScript(src: string) {
     return new Promise((resolve) => {
@@ -76,17 +83,19 @@ function MyProfile() {
       amount: Number(data?.consultationFee)
     }))
 
-    if (!order) {
-      alert("Server error. Are you online?");
-      return;
-    }
-
+    // if (!order) {
+    //   alert("Server error. Are you online?");
+    //   return;
+    // }
+    console.log("the fees of the transiction is ---->"+order?.fees)
     const options = {
-        key: "13g04gTO94pn21rqQBjNb7mn", // Enter the Key ID generated from the Dashboard
-        amount: (order?.fees * 100).toString(),
+        key: "rzp_test_cevPczkfMipFQF", // Enter the Key ID generated from the Dashboard
+        amount: (1200*100).toString(),
+        //amount: (order?.fees * 100).toString(),
         currency: 'INR',
         name: "Friend Indeed",
-        description: `Book your session @ ${order?.fees}`,
+        description: `Book your session @ 1200`,
+        //description: `Book your session @ ${order?.fees}`,
         order_id: order?.orderId,
         handler: async function (response: any) {
             const data = {
@@ -124,9 +133,49 @@ catch(err){
 
 }
 
+const subsFn = async() =>{
+  try{
+      const data = await checkSubscription(String(currentUser.id),String(therapistId))
+      console.log("Is the user subscribed??--->")
+      console.log(data.data.data[0])
+      if(data.data.data[0]==0){
+        setChatSubd(false)
+      }
+      else if(data.data.data[0]>0){
+        setChatSubd(true)
+      }
+  }
+  catch(err){
+    console.log(err)
+  }
+
+} 
+
   useEffect(() => {
     if(patientViewsTherapist || editProfile){
       dispatch(fetchTherapistProfileAsync(String(therapistId)))
+      // const subsFn = async() =>{
+      //     try{
+      //         const data = await checkSubscription(String(currentUser.id),String(therapistId))
+      //         console.log("Is the user subscribed??--->")
+      //         console.log(data.data.data[0])
+      //         if(data.data.data[0]==0){
+      //           setChatSubd(false)
+      //         }
+      //         else{
+      //           setChatSubd(true)
+      //         }
+      //     }
+      //     catch(err){
+      //       console.log(err)
+      //     }
+
+      // } 
+       subsFn();
+      
+      
+      //fetch if subscribed and set issubscribed state
+
      
     } else if (therapistViewsSelf) {
       console.log("here")
@@ -168,6 +217,73 @@ catch(err){
     
   setNewFAdded(false); 
 },[newFeedbackAdded])
+
+
+
+
+const subUnsub =async ()=>{
+  if(isChatSubd){
+   try{
+     const data = await chatUnSubscribe(String(currentUser.id), String(therapistId))
+      console.log("unsubscribed")
+     //console.log(data)
+       
+
+   }
+   catch(err){
+     console.log(err);
+   }
+  }
+  else{
+
+   try{
+     const data = await chatSubscribe(String(currentUser.id), String(therapistId))
+    console.log("Subscribed")
+     //console.log(data)
+     
+
+   }
+   catch(err){
+     console.log(err);
+   }
+
+  }
+  setChatSubd(!isChatSubd)
+ }
+
+
+//   useEffect(()=>{
+//     const subUnsub =async ()=>{
+//      if(isChatSubd){
+//       try{
+//         const data = await chatUnSubscribe(String(currentUser.id), String(therapistId))
+//           //console.log(data)
+          
+  
+//       }
+//       catch(err){
+//         console.log(err);
+//       }
+//      }
+//      else{
+
+//       try{
+//         const data = await chatSubscribe(String(currentUser.id), String(therapistId))
+//         //console.log(data)
+        
+  
+//       }
+//       catch(err){
+//         console.log(err);
+//       }
+//      }
+    
+//     }
+//     subUnsub();
+
+//     sethasClickedSubs(false)
+   
+// },[hasClickedSubscribed])
 
 
   return (
@@ -303,7 +419,7 @@ catch(err){
                 height={60}
                 borderRadius={40}
               />
-              <TagsArea>
+              {/* <TagsArea>
                 {[50, 100, 40, 120, 80].map(w => (
                   <ChipSkeleton
                     width={w}
@@ -311,7 +427,13 @@ catch(err){
                     borderRadius={15}
                   />
                 ))}
-              </TagsArea>
+              </TagsArea> */}
+
+              {data?.categories && (
+                <TagsArea>
+                  {data?.categories.map(c  => <StyledTag>{c?.category?.name}</StyledTag>)}
+                </TagsArea>
+              )}
             </>
           )
           : (therapistViewsSelf || patientViewsSelf || editProfile)
@@ -327,19 +449,40 @@ catch(err){
               />
               {data?.categories && (
                 <TagsArea>
-                  {data?.categories.map(c => <StyledTag>{c?.category?.name}</StyledTag>)}
+                  {data?.categories.map(c  => <StyledTag>{c?.category?.name}</StyledTag>)}
                 </TagsArea>
               )}
+            
             </>
           )
           : (
-            <CalendlyEventListener
-              onDateAndTimeSelected={function (e: DateAndTimeSelectedEvent){
+              <>
+             <CalendlyEventListener
+              
+             
+             onDateAndTimeSelected={function (e: DateAndTimeSelectedEvent){
+                
+                console.log(e)
                 if(e.data.event.length > 0) {
                   displayRazorpay()
                 }
               }}
+            
+            // onEventScheduled = {function (e : EventScheduledEvent){
+            //   console.log(e.data.payload.event)
+            //   const newLocal = e.data.payload.event;
+            //   const fncc = async ()=>{
+            //   const response = await axios.get(newLocal.uri, {
+            //     headers: {
+            //       Authorization: `Bearer ${token}`,
+            //     },
+            //   })
+            //   console.log(response)
+            // }
+            //   fncc();
+           // }}
             >
+              
               <PopupButton
                 pageSettings={{
                   backgroundColor: 'ffffff',
@@ -369,6 +512,53 @@ catch(err){
                 url={data?.bookingUrl || ''}
               />
             </CalendlyEventListener>
+            
+            {/* <Button
+                  name='Subscribe'
+                  width={50}
+                 
+                  // height={30}
+                  onClick={() => setOpenFeedbackModal(true)}
+                /> */}
+                <Button
+                  name={isChatSubd==true?'Subscribed' : 'Subscribe'} 
+                  width={80}
+                  height={60}
+                  marginLeft={10}
+                  marginTop={10}
+                  // height={30}
+                  onClick={() => subUnsub()}
+
+                />
+
+              {data?.categories && (
+                <TagsArea>
+                  {data?.categories.map(c  => <StyledTag>{c?.category?.name}</StyledTag>)}
+                </TagsArea>
+              )}
+                  
+              
+            
+            
+{/*             
+            <Button
+            styles={{
+                  borderRadius: 40,
+                  color: theme.neonGreen,
+                  backgroundColor: theme.copperBlue,
+                  padding: '20px 30px',
+                  border: 0,
+                  cursor: 'pointer'
+                }}
+                text={
+                  data?.consultationFee
+                    ? `Book a session now for ₹ ${data?.consultationFee}`
+                    : `Fee missing in profile`
+                  }
+            /> */}
+           
+            </>
+            
           )}
         </ActionsColumn>
       </SubContainer>
@@ -469,6 +659,27 @@ const StyledTag = styled(Tag)`
 const StyledButton = styled(Button)`
   border-radius: 25px;
 `;
+
+const StyledBtn2 = styled(Btn)`
+  background: ${theme.copperBlue};
+  border: 0;
+  border-radius: 50px;
+  height: 40px;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+
+  &:hover {
+    background-color: rgba(7, 48, 66, 0.6);
+    border: 0;
+  }
+
+  
+`;
+
 
 const InfoColumn = styled(Col)`
   display: flex;
