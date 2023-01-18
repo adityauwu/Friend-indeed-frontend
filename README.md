@@ -2,6 +2,7 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/84446d2e-379f-4178-bd64-6a03166b651c/deploy-status)](https://app.netlify.com/sites/friendindeed/deploys)
 
+https://www.linkedin.com/posts/aditya-aggarwal-47057b1ab_github-technology-design-activity-7015905565407080448-CQ1Q?utm_source=share&utm_medium=member_desktop
 
 
 <!-- PROJECT LOGO -->
